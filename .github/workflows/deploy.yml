@@ -1,0 +1,28 @@
+# This GitHub Actions workflow deploys the homepage to a web host via FTP
+
+name: Deploy Website via FTP
+
+on:
+  push:
+    branches:
+      - main  # Trigger deployment only on push to main branch
+
+jobs:
+  deploy:
+    name: Upload to Webhotel via FTP
+    runs-on: ubuntu-latest
+
+    steps:
+      # Checkout the latest commit from the main branch
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      # Upload website files to the FTP server
+      - name: Upload files over FTP
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.4
+        with:
+          server: ${{ secrets.FTP_HOST }}          # FTP server address
+          username: ${{ secrets.FTP_USERNAME }}    # FTP login username
+          password: ${{ secrets.FTP_PASSWORD }}    # FTP login password
+          server-dir: ${{ secrets.FTP_TARGET_DIR }} # Target directory on the server
+          local-dir: ./                            # Directory to upload (root of repo)
